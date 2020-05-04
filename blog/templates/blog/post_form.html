@@ -4,6 +4,10 @@
 <form action="" method="POST" class= "post-form" enctype="multipart/form-data">
     <table class="table">
         <tr>
+            <th>登録ユーザー</th>
+            <td> {{ user.get_username }}</td>
+        </tr>
+        <tr>
             <th>作成日</th>
             <td>{{ form.created_at }}</td>
         </tr>

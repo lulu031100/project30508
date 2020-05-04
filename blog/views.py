@@ -2,10 +2,12 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin  # 追加
 
+
 from django.views import generic
 from django.urls import reverse_lazy
 from .forms import PostCreateForm
 from .models import Post, Category
+
 
 class IndexView(generic.ListView):
     # 初期画面で表示される全部一覧用と検索ボックスに入力した時用
@@ -35,26 +37,39 @@ class CategoryView(generic.ListView):
         queryset = Post.objects.order_by('created_at').filter(category=category)
         return queryset
 
-
 class DetailView(generic.DetailView):
     # 詳細画面用
     template_name = 'blog/post_detail.html'
     model = Post
-    
+
+ 
 class AddView(LoginRequiredMixin, generic.CreateView):
     template_name = 'blog/post_form.html'
     model = Post
     form_class = PostCreateForm
     success_url = reverse_lazy('blog:index')
-    
+    # def get_initial(self):
+    #     initial = super().get_initial()
+    #     initial['created_user'] = self.request.user
+    #     return initial
+
+    def form_valid(self, form):
+        blogpost = form.save(commit=False)
+        blogpost.created_user = self.request.user
+        blogpost.save()
+        return super().form_valid(form)
+
+      
 class UpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = 'blog/post_form.html'
     model = Post
     form_class = PostCreateForm
     success_url = reverse_lazy('blog:index')
 
+
 class DeleteView(LoginRequiredMixin, generic.DeleteView):
     # 削除時の確認用
     template_name = 'blog/post_confirm_delete.html'
     model = Post
     success_url = reverse_lazy('blog:index')
+    

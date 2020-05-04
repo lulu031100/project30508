@@ -31,8 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts.apps.AccountsConfig', # [追加] 認証 5/3 hasegawa
     'blog.apps.BlogConfig',
-    'album.apps.AlbumConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'project3.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], # [追加] 認証 5/3 hasegawa Project3の下にもtemplatesを作った
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -124,3 +124,8 @@ STATIC_URL = '/static/'
 LOGIN_URL = 'admin:login'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
 MEDIA_URL = '/images/'
+
+#認証 5/3 hasegawa LOGIN後にリダイレクトされるページをトップページにする
+
+LOGIN_REDIRECT_URL = "/"
+

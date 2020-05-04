@@ -1,19 +1,21 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-<div class="post">
-  {% if post.image %}
-        <div class ="image">
-            <img src="{{ MEDIA_URL }}{{post.image}}" style="width:300px;height:auto">
-        </div>
-        {% endif %}
-</div>
+
 <div class="card mb-3">
     <h2 class="card-header bg-dark text-white">{{ post.title }}</h2>
     <div class="card-body">
+      <div class="post">
+        {% if post.image %}
+              <div class ="image">
+                  <img src="{{ MEDIA_URL }}{{post.image}}" style="width:300px;height:auto">
+              </div>
+              {% endif %}
+      </div>
       <p>{{ post.created_at }}, {{ post.category }}</p>
       {{ post.text | linebreaksbr | urlize }}
-    </div>
+      <p>{{ post.created_user }}</p>
+      </div>
     {% if user.is_superuser %}
     <div class="text-right mr-5 mb-2">
       <a href="{% url 'blog:update' post.pk %}" class="btn btn-primary">更新</a>
