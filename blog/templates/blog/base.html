@@ -19,9 +19,9 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <!-- <li class="nav-item active">
             <a class="nav-link" href="#">***</a>
-          </li>
+          </li> -->
           {% if user.is_authenticated %}
           <li class="navbar-brand">
             login: {{ user.get_username }}
@@ -30,10 +30,11 @@
             <a class="nav-link" href="{% url 'blog:add' %}">ブログの追加</a>
           </li>
           <li class="nav-item active">
+            <a class="nav-link" href="{% url 'logout' %}" class="logout">Logout</a>
           </li>
             {% else %}
             <li class="nav-item active">
-             <a class="nav-link" href="{% url 'accounts:login' %}">ログイン</a>
+              <a class="nav-link" href="{% url 'login' %}">ログイン</a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'accounts:signup' %}">サインアップ</a>

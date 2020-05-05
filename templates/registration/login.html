@@ -10,13 +10,13 @@
     <p>あなたのアカウントは、このサイトにログインする権利がありません。続けるためには、
    正しいアカウントでログインしてください。</p>
     {% else %}
-    <p>このページを見るためにはログインしてください。</p>
+    <p>このページを見るためにはログインしてください。</p >
     {% endif %}
 {% endif %}
  
 <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
-<table>
+<table class="table table-reflow"> 
 <tr>
     <td>{{ form.username.label_tag }}</td>
     <td>{{ form.username }}</td>
