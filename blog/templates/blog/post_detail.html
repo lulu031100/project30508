@@ -16,7 +16,7 @@
       {{ post.text | linebreaksbr | urlize }}
       <p>{{ post.created_user }}</p>
       </div>
-    {% if user.is_superuser %}
+    {% if post.created_user == request.user %}
     <div class="text-right mr-5 mb-2">
       <a href="{% url 'blog:update' post.pk %}" class="btn btn-primary">更新</a>
       <a href="{% url 'blog:delete' post.pk %}" class="btn btn-primary">削除</a>
