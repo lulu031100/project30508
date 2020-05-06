@@ -10,4 +10,9 @@ urlpatterns = [
     path('add/',views.AddView.as_view(), name='add'), # http://127.0.0.1:8000/add/
     path('update/<int:pk>/',views.UpdateView.as_view(), name='update'),# http://127.0.0.1:8000/update/
     path('delete/<int:pk>/',views.DeleteView.as_view(), name='delete'),# http://127.0.0.1:8000/delete/
+    path('comment/<int:pk>/', views.CommentFormView.as_view(), name='comment_form'),
+    path('comment/<int:pk>/approve/', views.comment_approve, name='comment_approve'),
+    path('comment/<int:pk>/remove/', views.comment_remove, name='comment_remove'),
+    path('reply/<int:pk>/', views.ReplyFormView.as_view(), name='reply_form'),
+    path('reply/<int:pk>/approve/', views.reply_approve, name='reply_approve'),
 ]

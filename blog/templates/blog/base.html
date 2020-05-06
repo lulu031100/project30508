@@ -59,18 +59,13 @@
               {% block content %}
               {% endblock %}
           </div>
-          <div class="col-md-4">
-              <ul class="list-group">
-                  <li class="list-group-item bg-dark text-white">カテゴリ一覧</li>
-                  {% for category in category_list %}
-                  <li class="list-group-item"><a href="{% url 'blog:category' category.pk %}">{{ category }}</a></li>
-                  {% endfor %}
-              </ul>                  
-          </div>
+      <aside class="col-md-4">
+        {% include "blog/snippets/sidebar.html" %}
+      </aside>
       </div>
     </div>
     <footer class="bg-dark text-white text-center py-3">
-        <p>created by tkt-mochizuki</p>
+        <p>created by hut_stayhome</p>
     </footer>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

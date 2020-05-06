@@ -1,12 +1,12 @@
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin  # 追加
-
+from django.contrib.auth.decorators import login_required
 
 from django.views import generic
 from django.urls import reverse_lazy
-from .forms import PostCreateForm
-from .models import Post, Category
+from .forms import PostCreateForm, CommentForm, ReplyForm
+from .models import Post, Category,Comment, Reply
 
 
 class IndexView(generic.ListView):
@@ -28,13 +28,12 @@ class CategoryView(generic.ListView):
     # カテゴリを選択したときに表示される一覧用
     template_name = 'blog/post_list.html'
     model = Post
-    paginate_by = 3 # 追加
 
     def get_queryset(self):
 
         category = get_object_or_404(Category, pk=self.kwargs['pk'])
         # queryset = Post.objects.order_by('created_at').filter(category=category)
-        queryset = Post.objects.order_by('created_at').filter(category=category)
+        queryset = Post.objects.order_by('-created_at').filter(category=category)
         return queryset
 
 class DetailView(generic.DetailView):
@@ -72,4 +71,64 @@ class DeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = 'blog/post_confirm_delete.html'
     model = Post
     success_url = reverse_lazy('blog:index')
-    
+class CommentFormView(LoginRequiredMixin, generic.CreateView):
+    model = Comment
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        post_pk = self.kwargs['pk']
+        comment.post = get_object_or_404(Post, pk=post_pk)
+        comment.save()
+        return redirect('blog:detail', pk=post_pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post_pk = self.kwargs['pk']
+        context['post'] = get_object_or_404(Post, pk=post_pk)
+        return context
+
+@login_required
+def comment_approve(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.approve()
+    return redirect('blog:detail', pk=comment.post.pk)
+ 
+ 
+@login_required
+def comment_remove(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.delete()
+    return redirect('blog:detail', pk=comment.post.pk)
+
+
+class ReplyFormView(LoginRequiredMixin, generic.CreateView):
+    model = Reply
+    form_class = ReplyForm
+
+    def form_valid(self, form):
+        reply = form.save(commit=False)
+        comment_pk = self.kwargs['pk']
+        reply.comment = get_object_or_404(Comment, pk=comment_pk)
+        reply.save()
+        return redirect('blog:detail', pk=reply.comment.post.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        comment_pk = self.kwargs['pk']
+        context['comment'] = get_object_or_404(Comment, pk=comment_pk)
+        return context
+
+
+@login_required
+def reply_approve(request, pk):
+    reply = get_object_or_404(Reply, pk=pk)
+    reply.approve()
+    return redirect('blog:detail', pk=reply.comment.post.pk)
+
+
+@login_required
+def reply_remove(request, pk):
+    reply = get_object_or_404(Reply, pk=pk)
+    reply.delete()
+    return redirect('blog:detail', pk=reply.comment.post.pk)
