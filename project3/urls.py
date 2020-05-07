@@ -25,7 +25,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')), # [追加]
     path('accounts/', include('django.contrib.auth.urls')), #ログイン・ログアウトの実装
     path('admin/', admin.site.urls),
-]
+   ]
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
   

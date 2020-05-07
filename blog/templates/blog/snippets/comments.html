@@ -7,7 +7,7 @@
   <p>{{ comment.text|linebreaksbr }}</p>
   <p>
     <a href="{% url 'blog:reply_form' comment.pk %}">返信する</a>
-    {% if not comment.approved %}
+    {% if not comment.approved and user.is_superuser %}
     ｜<a class="text-success" href="{% url 'blog:comment_approve' comment.pk %}">承認</a>
     ｜<a class="text-danger" href="{% url 'blog:comment_remove' comment.pk %}">削除</a>
     {% endif %}

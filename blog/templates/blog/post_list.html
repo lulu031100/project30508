@@ -6,7 +6,7 @@
 <div class="card mb-3">
     <h2 class="card-header bg-dark text-white">{{ post.title }}</h2>
     <div class="card-body">
-      <p>{{ post.created_at }}, {{ post.category }}</p>
+      <p>{{ post.created_at }}, {{ post.category }}, {{ post.created_user }}</p>
       <a href="{% url 'blog:detail' post.pk %}" class="btn btn-primary">続きを読む</a>
     </div>
 </div>
