@@ -7,6 +7,8 @@ app_name = 'blog'
 class Category(models.Model):
     name = models.CharField('カテゴリー名', max_length=200)
     created_at = models.DateTimeField('作成日',default=timezone.now)
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -22,6 +24,7 @@ class Post(models.Model):
     category = models.ForeignKey(
         Category, verbose_name = 'カテゴリ', on_delete = models.PROTECT
     )
+    like_num = models.IntegerField(default=0) #いいねの数の追加
  
     def __str__(self):
         return self.title
@@ -57,5 +60,11 @@ class Reply(models.Model):
 
     def __str__(self):
         return self.text
+class Like(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='like_user')
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_at = models.DateTimeField('作成日',default=timezone.now)
+   
+
 
 

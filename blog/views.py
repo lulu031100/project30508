@@ -1,12 +1,12 @@
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin  # 追加
 from django.contrib.auth.decorators import login_required
 
 from django.views import generic
 from django.urls import reverse_lazy
 from .forms import PostCreateForm, CommentForm, ReplyForm
-from .models import Post, Category,Comment, Reply
+from .models import Post, Category,Comment, Reply, Like
 
 
 class IndexView(generic.ListView):
@@ -40,6 +40,8 @@ class DetailView(generic.DetailView):
     # 詳細画面用
     template_name = 'blog/post_detail.html'
     model = Post
+    # like
+
 
  
 class AddView(LoginRequiredMixin, generic.CreateView):
@@ -71,6 +73,7 @@ class DeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = 'blog/post_confirm_delete.html'
     model = Post
     success_url = reverse_lazy('blog:index')
+
 class CommentFormView(LoginRequiredMixin, generic.CreateView):
     model = Comment
     form_class = CommentForm
@@ -132,3 +135,17 @@ def reply_remove(request, pk):
     reply = get_object_or_404(Reply, pk=pk)
     reply.delete()
     return redirect('blog:detail', pk=reply.comment.post.pk)
+@login_required
+def like(request, user_id, post_id):
+    """いいねボタンをクリック"""
+    if request.method == 'POST':
+    query = Like.objects.filter(user_id=user_id, post_id=post_id)
+    if  query.count() == 0:
+            like = Like()
+            like.user_id = user_id
+            like.post_id = post_id
+            like.save()
+    else
+            query.delete()
+ 
+            return HttpResponse("ajax is done!")
