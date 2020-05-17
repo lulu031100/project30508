@@ -1,4 +1,4 @@
-function likes(event, user_id, article_id) {
+function like(event, user_id, post_id) {
 
     // button-state
     var is_pressed = (event.target.getAttribute("aria-pressed") === "true");

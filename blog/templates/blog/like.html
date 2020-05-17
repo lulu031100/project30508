@@ -1,0 +1,9 @@
+    <div class="post">
+      <ul>
+        {% if {{islike}} == 1 %}
+            <li><img id ="likeon" aria-pressed="true" onclick="like(event, request_user,post.id)">いいね！{{like_count}}<span>({{ likes_cnt }})</span></li>
+        {% else %}
+            <li><img id ="likeoff" aria-pressed="false" onclick="like(event, request_user,post.id)">いいね！{{like_count}}<span>({{ likes_cnt }})</span></li>
+        {% endif %}
+      </ul>
+    </div>

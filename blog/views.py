@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin  # 追加
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from django.views import generic
 from django.urls import reverse_lazy
@@ -40,10 +41,7 @@ class DetailView(generic.DetailView):
     # 詳細画面用
     template_name = 'blog/post_detail.html'
     model = Post
-    # like
 
-
- 
 class AddView(LoginRequiredMixin, generic.CreateView):
     template_name = 'blog/post_form.html'
     model = Post
@@ -135,17 +133,25 @@ def reply_remove(request, pk):
     reply = get_object_or_404(Reply, pk=pk)
     reply.delete()
     return redirect('blog:detail', pk=reply.comment.post.pk)
+
 @login_required
-def like(request, user_id, post_id):
-    """いいねボタンをクリック"""
-    if request.method == 'POST':
-    query = Like.objects.filter(user_id=user_id, post_id=post_id)
-    if  query.count() == 0:
-            like = Like()
-            like.user_id = user_id
-            like.post_id = post_id
-            like.save()
-    else
-            query.delete()
- 
-            return HttpResponse("ajax is done!")
+def like(request, *args, **kwargs):
+    post = Post.objects.get(id=kwargs['post_id'])
+    is_like = Like.objects.filter(user=request.user).filter(post_id=post).count()
+    # unlike
+    if is_like > 0:
+        liking = Like.objects.get(post__id=kwargs['post_id'], user=request.user)
+        liking.delete()
+        post.like_num -= 1
+        post.save()
+        messages.warning(request, 'いいねを取り消しました')
+        return redirect(reverse_lazy('blog:detail', kwargs={'post_id': kwargs['post_id']}))
+    # like
+    post.like_num += 1
+    post.save()
+    like = Like()
+    like.user = request.user
+    like.post = post
+    like.save()
+    messages.success(request, 'いいね！しました')
+    return redirect(reverse_lazy('blog:detail', kwargs={'post_id': kwargs['post_id']}))

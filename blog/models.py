@@ -24,8 +24,7 @@ class Post(models.Model):
     category = models.ForeignKey(
         Category, verbose_name = 'カテゴリ', on_delete = models.PROTECT
     )
-    like_num = models.IntegerField(default=0) #いいねの数の追加
- 
+    like_num = models.IntegerField(default=0)
     def __str__(self):
         return self.title
 

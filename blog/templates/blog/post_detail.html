@@ -1,5 +1,4 @@
 {% extends 'blog/base.html' %}
-
 {% block content %}
 
 <div class="card mb-3">
@@ -16,16 +15,10 @@
       {{ post.text | linebreaksbr | urlize }}
     <p>{{ post.created_user }}</p>
 </div>
-    <div class="post">
-          <ul>
-              {% if row.is_like == 1 %}
-                  <li><a role="button" aria-pressed="true" onclick="likes(event, '1', '{{ row.id }}')">いいね！<span>({{ row.likes_cnt }})</span></a></li>
-              {% else %}
-                  <li><a role="button" aria-pressed="false" onclick="likes(event, '1', '{{ row.id }}')">いいね！<span>({{ row.likes_cnt }})</span></a></li>
-              {% endif %}
-          </ul>
-      </div>
-    <a href="{% url 'blog:like' {{request.user}} {{post.id}} %}">いいね！</a>{{ post.like_num }}
+<!--like-->
+ <div class="like">
+    <a href="{% url 'blog:like' post.pk request.user %}">いいね！</a>{{ post.like_num }}
+ </div>
     {% if post.created_user == request.user %}
     <div class="text-right mr-5 mb-2">
       <a href="{% url 'blog:update' post.pk %}" class="btn btn-primary">更新</a>
